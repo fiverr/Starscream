@@ -49,6 +49,10 @@ public class TCPTransport: Transport {
         //normal connection, will use the "connect" method below
     }
     
+    deinit {
+        disconnect()
+    }
+    
     public func connect(url: URL, timeout: Double = 10, certificatePinning: CertificatePinning? = nil) {
         guard let parts = url.getParts() else {
             delegate?.connectionChanged(state: .failed(TCPTransportError.invalidRequest))
@@ -85,6 +89,7 @@ public class TCPTransport: Transport {
     public func disconnect() {
         isRunning = false
         connection?.cancel()
+        connection = nil
     }
     
     public func register(delegate: TransportEventClient) {
